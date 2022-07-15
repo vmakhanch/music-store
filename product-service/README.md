@@ -1,6 +1,7 @@
 # Task 3
 
 Link to swagger http://music-store-backend-static-data-rs-scool-aws.s3-website-us-east-1.amazonaws.com/
+Link to CloudFront website - https://d16amwjd31tx37.cloudfront.net
 
 ## Task 3.1
 Get all products: GET https://r85lov72rb.execute-api.us-east-1.amazonaws.com/dev/products
