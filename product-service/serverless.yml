@@ -1,0 +1,44 @@
+service: product-service
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: 'dev'
+
+plugins:
+  - serverless-webpack
+  - serverless-s3-deploy
+
+custom:
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    includeModules: true
+    packager: 'npm'
+    excludeFiles: 'src/**/*.test.js'
+
+  assets:
+    targets:
+      - bucket: music-store-backend-static-data-rs-scool-aws
+        files:
+          - source: ./swagger/
+            globs:
+              - '**/*.*'
+
+functions:
+  getProductsList:
+    handler: src/handlers/getProductsList/getProductsList.handler
+    events:
+      - http:
+          path: /products
+          method: get
+          cors: true
+  getProductsById:
+    handler: src/handlers/getProductsById/getProductsById.handler
+    events:
+      - http:
+          path: /products/{id}
+          method: get
+          cors: true
