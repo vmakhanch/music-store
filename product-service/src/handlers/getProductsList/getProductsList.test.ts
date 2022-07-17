@@ -1,7 +1,8 @@
 import {ResponseStatusCodes, ResponseStringCodes} from '../../common/types'
+import {productService} from '../../common/services/product'
+
 import {handler} from './getProductsList'
 import {testData} from './testData'
-import {productService} from '../../common/services/product'
 
 jest.mock('../../common/services/product', () => ({
     productService: {
@@ -10,13 +11,14 @@ jest.mock('../../common/services/product', () => ({
 }));
 
 describe('getProductsList handler', () => {
+    const awsGatewayApiEvent = {} as any
     describe('positive cases', () => {
         beforeAll(() => {
             (productService.getAllProducts as jest.Mock<any>).mockImplementation(() => testData)
         })
 
         it('return correct data', async () => {
-            const result = await handler()
+            const result = await handler(awsGatewayApiEvent)
             const body = JSON.parse(result.body!)
 
             expect(result.statusCode).toEqual(ResponseStatusCodes.OK)
@@ -32,7 +34,7 @@ describe('getProductsList handler', () => {
         })
 
         it('return correct data', async () => {
-            const result = await handler()
+            const result = await handler(awsGatewayApiEvent)
             const error = JSON.parse(result.body!)
 
             expect(result.statusCode).toEqual(ResponseStatusCodes.INTERNAL_SERVER_ERROR)

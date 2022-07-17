@@ -30,3 +30,5 @@ yarn-error.log*
 /product-service/.webpack
 /product-service/node_modules
 /product-service/coverage
+/product-service/.env
+/product-service/.env.json

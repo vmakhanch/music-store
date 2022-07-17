@@ -1,7 +1,7 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "version" : "2022-07-15T09:05:36Z",
+    "version" : "2022-07-17T12:27:56Z",
     "title" : "dev-product-service"
   },
   "host" : "r85lov72rb.execute-api.us-east-1.amazonaws.com",
@@ -10,6 +10,18 @@
   "paths" : {
     "/products" : {
       "get" : {
+        "responses" : { }
+      },
+      "post" : {
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "producApiGa4aoSEDL2qgPK",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/producApiGa4aoSEDL2qgPK"
+          }
+        } ],
         "responses" : { }
       },
       "options" : {
@@ -69,6 +81,12 @@
           }
         }
       }
+    }
+  },
+  "definitions" : {
+    "producApiGa4aoSEDL2qgPK" : {
+      "type" : "object",
+      "title" : "The Product Schema"
     }
   }
 }

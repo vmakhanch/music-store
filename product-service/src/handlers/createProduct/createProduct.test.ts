@@ -1,54 +1,35 @@
 import {ResponseStringCodes, ResponseStatusCodes} from '../../common/types'
 import {productService} from '../../common/services/product'
 
-import {handler} from './getProductsById'
+import {handler} from './createProduct'
 import {testData} from './testData'
 
 jest.mock('../../common/services/product', () => ({
     productService: {
-        getProductById: jest.fn()
+        createProduct: jest.fn()
     }
 }));
 
-describe('getProductsById handler', () => {
+describe('createProduct handler', () => {
     describe('without API error', () => {
         beforeAll(() => {
-            (productService.getProductById as jest.Mock<any>).mockImplementation(() => testData)
+            (productService.createProduct as jest.Mock<any>).mockImplementation(data => data)
         })
 
         it('return existing product', async () => {
-            const productId = '7567ec4b-b10c-48c5-9345-fc73c48a80a0'
             const awsGatewayApiEvent = {
-                pathParameters: {
-                    id: productId
-                }
+                body: JSON.stringify(testData)
             } as any
             const result = await handler(awsGatewayApiEvent)
             const product = JSON.parse(result.body!)
 
             expect(result.statusCode).toEqual(ResponseStatusCodes.OK)
-            expect(product.id).toEqual(productId)
+            expect(testData.title).toEqual(product.title)
         })
-
-        it('return a not found error if product with id does not exist', async () => {
-            (productService.getProductById as jest.Mock<any>).mockImplementation(() => undefined)
-            const productId = '7567ec4b-b10c-48c5-9345-fc73c48a80a01'
-            const awsGatewayApiEvent = {
-                pathParameters: {
-                    id: productId
-                }
-            } as any
-            const result = await handler(awsGatewayApiEvent)
-            const error = JSON.parse(result.body!)
-
-            expect(result.statusCode).toEqual(ResponseStatusCodes.NOT_FOUND)
-            expect(error.errorCode).toEqual(ResponseStringCodes.NOT_FOUND)
-        })
-
 
         it('return an invalid data error if required params has been not passed', async () => {
             const awsGatewayApiEvent = {
-                pathParameters: {}
+                body: JSON.stringify({})
             } as any
             const result = await handler(awsGatewayApiEvent)
             const error = JSON.parse(result.body!)
@@ -60,17 +41,14 @@ describe('getProductsById handler', () => {
 
     describe('with API error', () => {
         beforeAll(() => {
-            (productService.getProductById as jest.Mock<any>).mockImplementation(() => {
+            (productService.createProduct as jest.Mock<any>).mockImplementation(() => {
                 throw new Error('Internal server error')
             })
         })
 
         it('return correct data', async () => {
-            const productId = '7567ec4b-b10c-48c5-9345-fc73c48a80a0'
             const awsGatewayApiEvent = {
-                pathParameters: {
-                    id: productId
-                }
+                body: JSON.stringify(testData)
             } as any
             const result = await handler(awsGatewayApiEvent)
             const error = JSON.parse(result.body!)
