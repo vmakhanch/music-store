@@ -1,0 +1,24 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "The Product Schema",
+  "properties": {
+    "title": {
+      "title": "The Title Schema",
+      "default": ""
+    },
+    "description": {
+      "title": "The Description Schema",
+      "default": ""
+    },
+    "count": {
+      "title": "The Count Schema",
+      "default": 0
+    },
+    "price": {
+      "title": "The Price Schema",
+      "default": 0
+    }
+  }
+}

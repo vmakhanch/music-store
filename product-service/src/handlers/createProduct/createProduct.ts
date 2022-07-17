@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent } from 'aws-lambda'
 
-import {ResponseStringCodes, ResponseStatusCodes} from '../../common/types'
+import {Product, ResponseStringCodes, ResponseStatusCodes} from '../../common/types'
 import {productService} from '../../common/services/product'
 import {AwsGatewayAPIResponse} from '../../common/entities/AwsGatewayAPIResponse'
 import {logRequest} from '../../common/utils/logRequest'
@@ -8,24 +8,16 @@ import {logRequest} from '../../common/utils/logRequest'
 export const handler = async (event: APIGatewayProxyEvent) => {
     try {
         logRequest(event)
+        const {title, description, price, count} = JSON.parse(event.body!) as any as Product
 
-        const {id} = event.pathParameters || {} as {id?: string}
-
-        if (!id) {
+        if (!title || !price || typeof price !== 'number' || typeof count !== 'number' || count < 0 || price < 0) {
             return new AwsGatewayAPIResponse(ResponseStatusCodes.INVALID_DATA, {
                 errorCode: ResponseStringCodes.INVALID_DATA,
-                errorMessage: `Product id param is required.`
+                errorMessage: '"title", "price" and "count" are required fields.'
             })
         }
 
-        const product = await productService.getProductById(id)
-
-        if (!product) {
-            return new AwsGatewayAPIResponse(ResponseStatusCodes.NOT_FOUND, {
-                errorCode: ResponseStringCodes.NOT_FOUND,
-                errorMessage: `Item with id ${id} not found.`
-            })
-        }
+        const product = await productService.createProduct({title, description, price, count})
 
         return new AwsGatewayAPIResponse(ResponseStatusCodes.OK, product)
     } catch (error) {

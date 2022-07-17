@@ -30,6 +30,7 @@ custom:
 functions:
   getProductsList:
     handler: src/handlers/getProductsList/getProductsList.handler
+    environment: ${file(.env.json)}
     events:
       - http:
           path: /products
@@ -37,8 +38,21 @@ functions:
           cors: true
   getProductsById:
     handler: src/handlers/getProductsById/getProductsById.handler
+    environment: ${file(.env.json)}
     events:
       - http:
           path: /products/{id}
           method: get
           cors: true
+  createProduct:
+    handler: src/handlers/createProduct/createProduct.handler
+    environment: ${file(.env.json)}
+    events:
+      - http:
+          path: /products
+          method: post
+          cors: true
+          request:
+            schemas:
+              application/json: ${file(swagger/product-schema.json)}
+

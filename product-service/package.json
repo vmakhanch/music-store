@@ -26,6 +26,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "pg": "^8.7.3"
   }
 }
