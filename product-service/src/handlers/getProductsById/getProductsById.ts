@@ -28,7 +28,14 @@ export const handler = async (event: APIGatewayProxyEvent) => {
         }
 
         return new AwsGatewayAPIResponse(ResponseStatusCodes.OK, product)
-    } catch (error) {
+    } catch (error: any) {
+        if (error.code === '22P02') {
+            return new AwsGatewayAPIResponse(ResponseStatusCodes.INVALID_DATA, {
+                errorCode: ResponseStringCodes.INVALID_DATA,
+                errorMessage: `Product id has invalid valid value.`
+            })
+        }
+
         console.error(error)
 
         return new AwsGatewayAPIResponse(ResponseStatusCodes.INTERNAL_SERVER_ERROR, {
